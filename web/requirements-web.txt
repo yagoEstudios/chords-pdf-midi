@@ -1,0 +1,6 @@
+flask
+gunicorn
+pyRealParser
+reportlab
+pychord
+midiutil

@@ -1,0 +1,200 @@
+:root {
+  --primary: #BB86FC;
+  --secondary: #03DAC5;
+  --bg: #121212;
+  --surface: #1E1E1E;
+  --surface2: #2A2A2A;
+  --text: #E6E6E6;
+  --placeholder: #8A8A8A;
+  /* radios y huecos proporcionales reutilizables */
+  --radius: clamp(0.5rem, 2vw, 0.75rem);
+  --gap: clamp(0.4rem, 2vw, 0.75rem);
+}
+
+* { box-sizing: border-box; }
+
+/* escala global: equivale a tener el zoom al 110% (todo lo demás usa rem) */
+html { font-size: 110%; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Segoe UI", system-ui, sans-serif;
+  padding: clamp(0.75rem, 3vw, 1.5rem);
+}
+
+.card {
+  background: var(--surface);
+  border-radius: clamp(0.75rem, 3vw, 1.25rem);
+  padding: clamp(1.5rem, 4vw, 2.5rem);
+  width: 100%;
+  max-width: min(92vw, 38rem);
+  box-shadow: 0 0.5rem 1.9rem rgba(0, 0, 0, .4);
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(1.5rem, 4vw, 2.25rem);
+  color: var(--primary);
+  text-align: center;
+}
+
+.subtitle {
+  margin: 0.3em 0 1.6em;
+  text-align: center;
+  color: var(--secondary);
+  font-size: clamp(0.9rem, 2vw, 1.15rem);
+}
+
+label {
+  display: block;
+  margin: 1.1em 0 0.45em;
+  font-size: clamp(0.85rem, 1.6vw, 1rem);
+  color: var(--placeholder);
+}
+
+input[type="text"], textarea {
+  width: 100%;
+  padding: clamp(0.65rem, 1.6vw, 0.85rem) clamp(0.75rem, 1.8vw, 1rem);
+  background: var(--surface2);
+  border: 1px solid #3a3a3a;
+  border-radius: var(--radius);
+  color: var(--text);
+  font-size: clamp(1rem, 1.6vw, 1.2rem);   /* mín 16px: evita el zoom de iOS */
+  font-family: inherit;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 2.6em;
+  line-height: 1.4;
+}
+
+input[type="text"]:focus, textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+input[type="text"]::placeholder, textarea::placeholder { color: var(--placeholder); }
+
+.opt {
+  color: #6a6a6a;
+  font-size: .8em;
+  font-style: italic;
+}
+
+.secondary {
+  display: block;
+  margin: 0.5em 0 0 auto;
+  padding: clamp(0.45rem, 2vw, 0.55rem) clamp(0.8rem, 3vw, 1.15rem);
+  background: var(--surface2);
+  border: 1px solid #3a3a3a;
+  border-radius: var(--radius);
+  color: var(--text);
+  font-size: clamp(0.85rem, 1.5vw, 1rem);
+  cursor: pointer;
+  transition: border-color .15s, color .15s;
+}
+
+.secondary:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.file-row {
+  margin-top: var(--gap);
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--gap);
+}
+
+.file-row .secondary { margin: 0; flex-shrink: 0; }
+
+.file-name {
+  flex: 1;
+  min-width: 0;
+  color: #ffffff;
+  font-size: clamp(0.85rem, 1.5vw, 1rem);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+  gap: var(--gap);
+}
+
+.seg {
+  display: flex;
+  gap: clamp(0.25rem, 1vw, 0.4rem);
+  background: var(--surface2);
+  padding: 0.25rem;
+  border-radius: var(--radius);
+}
+
+.seg button {
+  flex: 1;
+  padding: clamp(0.5rem, 2.2vw, 0.6rem) 0.2rem;
+  background: transparent;
+  border: none;
+  border-radius: calc(var(--radius) - 0.2rem);
+  color: var(--placeholder);
+  font-size: clamp(0.82rem, 1.5vw, 1rem);
+  cursor: pointer;
+  transition: background .15s, color .15s;
+}
+
+.seg button.active {
+  background: var(--primary);
+  color: #1a1a1a;
+  font-weight: 600;
+}
+
+.primary {
+  width: 100%;
+  margin-top: clamp(1rem, 4vw, 1.5rem);
+  padding: clamp(0.7rem, 3vw, 0.85rem);
+  background: var(--primary);
+  border: none;
+  border-radius: var(--radius);
+  color: #1a1a1a;
+  font-size: clamp(1rem, 1.8vw, 1.25rem);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.primary:disabled { opacity: .5; cursor: default; }
+
+.status {
+  margin: clamp(0.8rem, 3vw, 1.1rem) 0 0;
+  min-height: 1.2em;
+  font-size: clamp(0.85rem, 1.5vw, 1rem);
+  text-align: center;
+  word-break: break-word;
+}
+
+.status.ok { color: var(--secondary); }
+.status.error { color: #CF6679; }
+
+@media (max-width: 32rem) {
+  body {
+    align-items: flex-start;
+    padding: 0.75rem;
+  }
+  .card {
+    max-width: 100%;
+    padding: clamp(1.1rem, 5vw, 1.6rem);
+  }
+  /* en móvil los dos campos opcionales van apilados */
+  .grid { grid-template-columns: 1fr; }
+  /* el nombre del archivo ocupa su propia línea completa */
+  .file-name { flex-basis: 100%; order: 3; }
+}

@@ -1,0 +1,13 @@
+# Salidas y basura de trabajo
+salida/
+resultadosBasura/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Sistema
+.DS_Store
+Thumbs.db

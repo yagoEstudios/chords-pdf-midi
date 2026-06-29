@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Acordes → PDF + MIDI</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="card">
+    <h1>🎼 Acordes → PDF + MIDI</h1>
+    <p class="subtitle">MusicXML · TXT</p>
+
+    <form id="form">
+      <label>Enlace, archivo (.musicxml / .txt) o el texto del .txt</label>
+      <textarea id="url" name="url" rows="1" placeholder="Pega un enlace Real… o el contenido de un .txt"></textarea>
+      <button type="button" class="secondary" id="clear">Limpiar</button>
+
+      <div class="file-row">
+        <label for="file" class="secondary">Elegir archivo</label>
+        <span id="fileName" class="file-name">no hay archivo</span>
+        <button type="button" class="secondary" id="clearFile">Quitar</button>
+        <input type="file" id="file" name="file" accept=".musicxml,.xml,.txt" hidden>
+      </div>
+
+      <div class="grid">
+        <div>
+          <label>Transponer a <span class="opt">(opcional)</span></label>
+          <input type="text" name="transpose" placeholder="Gm, Db, +3, grados…">
+        </div>
+        <div>
+          <label>BPM <span class="opt">(opcional)</span></label>
+          <input type="text" name="bpm" placeholder="120">
+        </div>
+      </div>
+
+      <label>Salida</label>
+      <div class="seg" id="seg">
+        <button type="button" class="active" data-val="full">Completo (zip)</button>
+        <button type="button" data-val="pdf">Solo PDF</button>
+        <button type="button" data-val="midi">Solo MIDI</button>
+      </div>
+      <input type="hidden" name="output" id="output" value="full">
+
+      <button type="submit" class="primary" id="submit">Generar</button>
+    </form>
+
+    <p class="status" id="status"></p>
+  </main>
+
+  <script>
+    // ⚠️ CAMBIA esto por tu URL de PythonAnywhere (sin barra final):
+    const BACKEND_URL = "https://TUUSUARIO.pythonanywhere.com";
+
+    const urlField = document.getElementById('url');
+    document.getElementById('clear').addEventListener('click', () => {
+      urlField.value = '';
+      urlField.focus();
+    });
+
+    const fileField = document.getElementById('file');
+    const fileName = document.getElementById('fileName');
+    fileField.addEventListener('change', () => {
+      fileName.textContent = fileField.files.length ? fileField.files[0].name : 'no hay archivo';
+    });
+    document.getElementById('clearFile').addEventListener('click', () => {
+      fileField.value = '';
+      fileName.textContent = 'no hay archivo';
+    });
+
+    const seg = document.getElementById('seg');
+    const outInput = document.getElementById('output');
+    seg.addEventListener('click', e => {
+      if (e.target.tagName !== 'BUTTON') return;
+      [...seg.children].forEach(b => b.classList.remove('active'));
+      e.target.classList.add('active');
+      outInput.value = e.target.dataset.val;
+    });
+
+    const form = document.getElementById('form');
+    const status = document.getElementById('status');
+    const submit = document.getElementById('submit');
+
+    function filenameFromCD(cd) {
+      if (!cd) return null;
+      const m = /filename\*?=(?:UTF-8'')?["']?([^"';]+)/i.exec(cd);
+      return m ? decodeURIComponent(m[1]) : null;
+    }
+
+    form.addEventListener('submit', async e => {
+      e.preventDefault();
+      status.className = 'status';
+      status.textContent = 'Generando…';
+      submit.disabled = true;
+      try {
+        const resp = await fetch(BACKEND_URL + '/convert', { method: 'POST', body: new FormData(form) });
+        if (!resp.ok) {
+          let msg = 'Error';
+          try { msg = (await resp.json()).error || msg; } catch (_) {}
+          status.className = 'status error';
+          status.textContent = '⚠ ' + msg;
+          return;
+        }
+        const blob = await resp.blob();
+        const name = filenameFromCD(resp.headers.get('Content-Disposition')) || 'descarga';
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = name;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(a.href);
+        const warn = resp.headers.get('X-Warnings');
+        status.className = 'status ok';
+        status.textContent = '✓ ' + name + (warn ? '  —  ⚠ ' + warn : '');
+      } catch (err) {
+        status.className = 'status error';
+        status.textContent = '⚠ ' + err.message;
+      } finally {
+        submit.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
