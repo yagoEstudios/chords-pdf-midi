@@ -2,7 +2,7 @@
 
 Turns a chord progression into a **PDF lead sheet** (Real Pro style) and a **MIDI** with voice leading.
 
-**▶ Web: https://yagoestudios.github.io/acordes-pdf-midi/**
+**▶ Web: https://yagoestudios.github.io/chords-pdf-midi/**
 
 Input: a Real link, a `.musicxml`/`.xml` file, or your own `.txt`. Everything is normalized to a `.txt`, and the PDF and MIDI are generated from it.
 
