@@ -53,15 +53,15 @@ Creates `output/<Song>/` with the `.txt`, the source, the `.pdf` and the `.mid`.
 
 ## Header
 
-One line per variable, `key=value`, at the top of the file. All optional. **Values in quotes except `bpm`.** Then a blank line and the chords.
+One line per variable, `key=value`, at the top of the file. Only `tune` is required; the rest are optional. **Values in quotes except `bpm`.** Then a blank line and the chords.
 
 | Key | Example |
 |-------|-------------|
 | `tune` | `tune="My Song"` |
 | `artist` | `artist="Lewis"` (optional) |
-| `bpm` | `bpm=120` |
+| `bpm` | `bpm=120` (optional) |
 | `key` | `key="C"` (optional) |
-| `sig` | `sig="4/4"` |
+| `sig` | `sig="4/4"` (optional) |
 | `trans` | `trans="Eb"` (optional) |
 
 ## Chords
