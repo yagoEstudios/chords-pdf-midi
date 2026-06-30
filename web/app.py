@@ -1,7 +1,7 @@
 """Backend web autosuficiente: contiene la logica de conversion (copiada de
 ireal_def.py, sin la GUI) + servidor Flask. No importa nada del proyecto padre.
 
-POST /convert: sube fuente (iReal url / .musicxml / .txt) -> PDF + MIDI.
+POST /convert: sube fuente (Real url / .musicxml / .txt) -> PDF + MIDI.
   output=full  -> .zip con la carpeta (txt + fuente + pdf + mid)
   output=pdf   -> solo el .pdf
   output=midi  -> solo el .mid
@@ -41,10 +41,10 @@ DEFAULT_OUTPUT = os.path.join(os.path.expanduser("~"), "Downloads")
 
 
 # ========================
-# Conversión de acordes iReal -> legible
+# Conversión de acordes Real -> legible
 # ========================
 def render_chord(c: str) -> str:
-    """Convierte un acorde de la notación interna de iReal a símbolo legible."""
+    """Convierte un acorde de la notación interna de Real a símbolo legible."""
     c = c.lstrip("QfU")         # quita marcadores de coda (Q) / fermata (f) / End (U) pegados
     if not c:
         return ""
@@ -72,7 +72,7 @@ def render_chord(c: str) -> str:
 
 
 def readable_chord(c: str) -> str:
-    """Convierte un acorde iReal interno a nombre legible (pychord/.txt):
+    """Convierte un acorde Real interno a nombre legible (pychord/.txt):
     ^->maj, -->m, h->m7b5, o->dim. Sin paréntesis ni símbolos."""
     c = c.lstrip("QfU")         # quita marcadores de coda (Q) / fermata (f) / End (U) pegados
     if not c:
@@ -137,7 +137,7 @@ def split_measures(chord_string):
                 while ch[:1] in ("Q", "f", "U"):   # coda (Q) / fermata (f) / End (U) pegados
                     if ch[0] == "Q":           # Q al inicio = Coda (izq.), al final = To Coda (der.)
                         cur["coda"] = "left" if not cur["chords"] else "right"
-                    elif ch[0] == "U":         # marcador End de iReal: fin real de la pieza
+                    elif ch[0] == "U":         # marcador End de Real: fin real de la pieza
                         cur["end"] = True
                     else:
                         cur["fermata"] = True
@@ -164,7 +164,7 @@ def split_measures(chord_string):
 
 
 def expand_repeats(measures):
-    """Expande las repeticiones marcadas con { } (iReal) o forward/backward
+    """Expande las repeticiones marcadas con { } (Real) o forward/backward
     (musicxml): duplica el tramo repetido. `times` (en el compás de cierre) =
     nº de veces que suena el tramo (por defecto 2). Quita las marcas { }."""
     out, stack = [], []
@@ -684,7 +684,7 @@ def chord_width(c, chord, root_size, ext_size, degree=False):
 
 
 def draw_chord(c, x, baseline, chord, root_size, ext_size, degree=False):
-    """Acorde estilo iReal: raíz grande; bemol/sostenido de la raíz en
+    """Acorde estilo Real: raíz grande; bemol/sostenido de la raíz en
     superíndice apilado sobre la extensión (subíndice); bajo (slash) debajo."""
     if degree:
         _draw_degree(c, x, baseline, chord, root_size, ext_size)
@@ -1419,7 +1419,7 @@ def parse_musicxml(path):
 
 
 def ireal_to_tunes(url):
-    """iReal url -> lista de tunes con .measures (y .raw para el MIDI)."""
+    """Real url -> lista de tunes con .measures (y .raw para el MIDI)."""
     return [SimpleNamespace(
         title=t.title, composer=getattr(t, "composer", ""), style=getattr(t, "style", ""),
         key=getattr(t, "key", ""), bpm="", time_signature=t.time_signature,
@@ -1428,7 +1428,7 @@ def ireal_to_tunes(url):
 
 
 def load_tunes(src):
-    """Devuelve (kind, [tunes]). src = url iReal o ruta a .musicxml/.xml/.txt."""
+    """Devuelve (kind, [tunes]). src = url Real o ruta a .musicxml/.xml/.txt."""
     if src.startswith("irealb://") or src.startswith("irealbook://"):
         return "ireal", ireal_to_tunes(src)
     ext = os.path.splitext(src)[1].lower()
