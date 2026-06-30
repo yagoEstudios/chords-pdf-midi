@@ -781,7 +781,8 @@ def draw_tune(c, tune, page_w, page_h):
             cur_section = mz["section"]
         if i != 0 and (mz.get("newrow") or col >= MEASURES_PER_ROW):
             col = 0
-            y -= cell_h + row_gap
+            gap = row_gap if (mz.get("section") or mz.get("coda") or mz.get("fermata")) else row_gap / 2
+            y -= cell_h + gap
         if y - cell_h < margin:
             c.showPage()
             y = page_h - margin
